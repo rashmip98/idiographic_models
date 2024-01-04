@@ -1,0 +1,20 @@
+test: False
+
+train:
+  epochs: 30
+  batch_size: 4
+  lr: 0.001
+  momentum: 0.9
+
+model:
+  pretrained: "resnet50"
+  layer: 1
+  individual: True
+
+device: "cuda:0"
+
+data:
+  imgs_path: ''
+  csv_path: ''
+
+save: ''
