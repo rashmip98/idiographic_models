@@ -33,7 +33,7 @@ def main():
 
                 if avg_val_loss < best_vloss:
                     best_vloss = avg_val_loss
-                    model_path = 'ind_{}_{}'.format(user,epoch)
+                    model_path = 'ind_{}'.format(user)
                     torch.save(model.state_dict(), params_loaded['save']+'/'+model_path)
         
         else:
@@ -41,7 +41,7 @@ def main():
             
             if avg_val_loss < best_vloss:
                 best_vloss = avg_val_loss
-                model_path = 'global_{}'.format(epoch)
+                model_path = 'global'
                 torch.save(model.state_dict(), params_loaded['save']+'/'+model_path)
 
 
@@ -98,7 +98,7 @@ def train_loop(model, feature_extractor, optimizer, df, params_loaded):
                 running_vloss +=vloss
         avg_vloss = running_vloss / (i+1)
 
-        return last_loss, avg_vloss
+        #return last_loss, avg_vloss
 
 if __name__ == '__main__':
     main()
