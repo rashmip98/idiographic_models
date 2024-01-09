@@ -14,7 +14,7 @@ class BuildDataset(Dataset):
     def __getitem__(self,index):
         result = self.df.iloc[index]
         rating = result['response']
-        img_path = self.params_loaded.data.imgs_path + '/' + result['stimulus']
+        img_path = self.params_loaded['data']['imgs_path'] + '/' + result['stimulus'][36:44]
         img = Image.open(img_path)
         img = self.preprocess(img)
         
