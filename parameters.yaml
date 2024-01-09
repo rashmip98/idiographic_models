@@ -9,12 +9,12 @@ train:
 model:
   pretrained: "resnet50"
   layer: 1
-  individual: True
+  individual: False
 
 device: "cuda:0"
 
 data:
-  imgs_path: ''
-  csv_path: ''
+  imgs_path: 'images'
+  csv_path: 'ratings.csv'
 
-save: ''
+save: 'results'
