@@ -1,10 +1,10 @@
 test: False
 
 train:
-  epochs: 30
+  epochs: 1
   batch_size: 4
   lr: 0.001
-  momentum: 0.9
+  betas: [0.9, 0.999]
 
 model:
   pretrained: "resnet50"
@@ -14,7 +14,7 @@ model:
 device: "cuda:0"
 
 data:
-  imgs_path: 'images'
-  csv_path: 'ratings.csv'
+  imgs_path: '/home1/r/rphadnis/idiographic_model/images'
+  csv_path: '/home1/r/rphadnis/idiographic_model/ratings.csv'
 
-save: 'results'
+save: '/home1/r/rphadnis/idiographic_model/results/'
