@@ -6,7 +6,7 @@ import pandas as pd
 
 class BuildDataset(Dataset):
     def __init__(self, df, params_loaded):
-        self.device = torch.device(params_loaded.device)
+        
         self.params_loaded = params_loaded
         self.preprocess = transforms.Compose([transforms.Resize(224), transforms.ToTensor(),transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),])
         self.df = df
@@ -14,7 +14,7 @@ class BuildDataset(Dataset):
     def __getitem__(self,index):
         result = self.df.iloc[index]
         rating = result['response']
-        img_path = self.params_loaded['data']['imgs_path'] + '/' + result['stimulus'][36:44]
+        img_path = self.params_loaded['data']['imgs_path'] + '/' + result['stimulus'][36:44].lstrip("0")
         img = Image.open(img_path)
         img = self.preprocess(img)
         
@@ -42,7 +42,7 @@ class BuildDataloader(DataLoader):
           rating_list.append(rating)  
 
         out_batch['images'] = torch.stack(img_list,dim=0)
-        out_batch['ratings'] = rating_list
+        out_batch['ratings'] = torch.Tensor(rating_list)
 
         return out_batch
     
