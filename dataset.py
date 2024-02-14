@@ -1,24 +1,45 @@
 import torch
-from torchvision import transforms
+# from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
-from PIL import Image
+# from PIL import Image
 import pandas as pd
 
+# class BuildDataset(Dataset):
+#     def __init__(self, df, params_loaded):
+        
+#         self.params_loaded = params_loaded
+#         self.preprocess = transforms.Compose([transforms.Resize(224), transforms.ToTensor(),transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),])
+#         self.df = df
+
+#     def __getitem__(self,index):
+#         result = self.df.iloc[index]
+#         rating = result['response']
+#         img_path = self.params_loaded['data']['imgs_path'] + '/' + result['stimulus'][36:44].lstrip("0")
+#         img = Image.open(img_path)
+#         img = self.preprocess(img)
+        
+#         return img, rating
+    
+#     def __len__(self):
+#         return self.df.shape[0]
+
 class BuildDataset(Dataset):
-    def __init__(self, df, params_loaded):
+    def __init__(self, df, features, params_loaded):
         
         self.params_loaded = params_loaded
-        self.preprocess = transforms.Compose([transforms.Resize(224), transforms.ToTensor(),transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),])
+        self.features = features
         self.df = df
 
     def __getitem__(self,index):
         result = self.df.iloc[index]
-        rating = result['response']
-        img_path = self.params_loaded['data']['imgs_path'] + '/' + result['stimulus'][36:44].lstrip("0")
-        img = Image.open(img_path)
-        img = self.preprocess(img)
+        if self.params_loaded['model']['individual']:
+            rating = result['userNormalizedResponse']
+        else:
+            rating = result['globalNormalizedResponse']
+        img_id = result['stimulus'][36:44].lstrip("0")
+        feat = self.features[img_id].squeeze(0)
         
-        return img, rating
+        return feat, rating
     
     def __len__(self):
         return self.df.shape[0]
@@ -41,7 +62,7 @@ class BuildDataloader(DataLoader):
           img_list.append(img)
           rating_list.append(rating)  
 
-        out_batch['images'] = torch.stack(img_list,dim=0)
+        out_batch['features'] = torch.stack(img_list,dim=0)
         out_batch['ratings'] = torch.Tensor(rating_list)
 
         return out_batch
