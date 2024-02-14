@@ -2,13 +2,13 @@ import torch
 import torch.nn as nn
 
 class IdiographicClassifier(nn.Module):
-    def __init__(self, params_loaded, in_features):
+    def __init__(self, params_loaded):
         super().__init__()
         
         # self.pretrained_model = torch.hub.load('pytorch/vision:v0.10.0', params_loaded['model']['pretrained'], pretrained=True)
         # self.feature_extractor = torch.nn.Sequential(*list(self.pretrained_model.children())[:-1*params_loaded['model']['layer']])
         self.loss = nn.MSELoss()
-        self.classifier = nn.Sequential(nn.Linear(in_features,1000),nn.ReLU(),nn.Linear(1000,1))
+        self.classifier = nn.Sequential(nn.Linear(1000,1000),nn.ReLU(),nn.Linear(1000,1))
 
         self._init_weights()
     
@@ -29,5 +29,3 @@ class IdiographicClassifier(nn.Module):
        img = torch.squeeze(img, (2,3))
        out = self.classifier(img)
        return out
-       
-
