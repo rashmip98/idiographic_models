@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 
 def main():
-    with open("parameters.yaml", "r") as stream:
+    with open("/home1/r/rphadnis/idiographic_model/idiographic_models/parameters.yaml", "r") as stream:
         params_loaded = yaml.safe_load(stream)
 
     train_data_csv = pd.read_csv(params_loaded['data']['train_csv_path'])
@@ -23,7 +23,7 @@ def main():
         # feature_extractor = torch.nn.Sequential(*list(pretrained_model.children())[:-1*params_loaded['model']['layer']])
         # feature_extractor.eval()
         model = IdiographicClassifier(params_loaded)
-        optimizer = torch.optim.Adam(model.parameters(), lr=params_loaded['train']['lr'], betas=(params_loaded['train']['betas'][0],params_loaded['train']['betas'][1]))
+        optimizer = torch.optim.SGD(model.parameters(), lr=params_loaded['train']['lr'], momentum=params_loaded['train']['momentum'],weight_decay=params_loaded['train']['wt_decay'])
    
         if params_loaded['model']['individual']:
             pass
@@ -94,7 +94,7 @@ def train_loop(model, optimizer, train_df, val_df, test_df, features, params_loa
                 ratings = batch['ratings']
                 # feats = feature_extractor(imgs)
                 out = model(feats)
-                vloss = model.compute_loss(out, ratings)
+                vloss = model.compute_loss(torch.squeeze(out), ratings)
                 val_epoch_loss.append(vloss)
         val_loss.append(sum(val_epoch_loss)/len(val_epoch_loss))
 
