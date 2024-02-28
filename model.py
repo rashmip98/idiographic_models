@@ -8,7 +8,7 @@ class IdiographicClassifier(nn.Module):
         # self.pretrained_model = torch.hub.load('pytorch/vision:v0.10.0', params_loaded['model']['pretrained'], pretrained=True)
         # self.feature_extractor = torch.nn.Sequential(*list(self.pretrained_model.children())[:-1*params_loaded['model']['layer']])
         self.loss = nn.MSELoss()
-        self.classifier = nn.Sequential(nn.Linear(1000,50),nn.LayerNorm(50),nn.LeakyReLU(inplace=True),nn.Linear(50,1))
+        self.classifier = nn.Sequential(nn.Linear(512,50),nn.Dropout(p=0.2),nn.LayerNorm(50),nn.LeakyReLU(inplace=True),nn.Linear(50,1))
 
         self._init_weights()
     
